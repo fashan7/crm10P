@@ -27,3 +27,5 @@ import RegisterForm from '@/components/auth/RegisterForm.vue';
         </v-container>
     </div>
 </template>
+
+
