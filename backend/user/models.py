@@ -27,6 +27,22 @@ class CustomUserManager(UserManager):
             raise ValueError('Superuser must have is_superuser=True.')
         return self._create_user(email, password, **extra_fields)
     
+class Privilege(models.Model):
+    code = models.CharField(max_length=50, unique=True)
+    description = models.TextField()
+    is_active = models.BooleanField(default=True)
+    creation_date = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+    assigned_users = models.ManyToManyField(
+        'User',
+        related_name='assigned_privileges',
+        related_query_name='assigned_privileges'
+    )
+
+
+    def __str__(self):
+        return self.code
+    
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
     USER_PROFILE_CHOICES = (
@@ -42,6 +58,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     profile = models.CharField(max_length=20, choices=USER_PROFILE_CHOICES)
     manages_lead = models.ManyToManyField(Lead, related_name='managers')
     belongs_to_manager = models.ForeignKey(Manager, on_delete=models.CASCADE)
+    privileges = models.ManyToManyField(
+        'Privilege',
+        related_name='users',
+        related_query_name='users'
+    )
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
