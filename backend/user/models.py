@@ -57,7 +57,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     profile = models.CharField(max_length=20, choices=USER_PROFILE_CHOICES)
     manages_lead = models.ManyToManyField(Lead, related_name='managers')
-    belongs_to_manager = models.ForeignKey(Manager, on_delete=models.CASCADE)
+    belongs_to_manager = models.ForeignKey(Manager, on_delete=models.CASCADE, null=True, default=None)
     privileges = models.ManyToManyField(
         'Privilege',
         related_name='users',

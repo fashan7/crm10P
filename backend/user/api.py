@@ -23,6 +23,7 @@ def signup(request):
 
         #send verification email later
     else:
+        print(form.errors)
         message = 'error'
 
-    return JsonResponse({'status':message})
+    return JsonResponse({'message':message})

@@ -54,7 +54,6 @@ export default {
     const errors: string[] = ref([]);
 
     const signup = () => {
-      alert('Hii');
       errors.value = [];
 
       if (form.value.name === '') {
@@ -77,6 +76,7 @@ export default {
         axios
           .post('/api/signup/', form.value)
           .then((response) => {
+            alert("Ress"+response)
             if (response.data.message === 'success') {
               alert('User registered');
               form.value.email = '';
@@ -88,6 +88,7 @@ export default {
             }
           })
           .catch((error) => {
+            alert("error "+error)
             console.log('error', error);
           });
       }
