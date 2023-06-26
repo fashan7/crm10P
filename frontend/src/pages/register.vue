@@ -1,3 +1,87 @@
+<script setup lang="ts">
+import { ref,Ref } from 'vue';
+import axios from 'axios';
+
+import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
+import logo from '@images/logo.svg?raw'
+
+interface Form {
+  profile: string;
+  email: string;
+  name: string;
+  password1: string;
+  password2: string;
+}
+
+
+const isPassword1Visible = ref(false);
+const isPassword2Visible = ref(false);
+
+const form: Ref<Form> = ref({
+  profile:'advisor',
+  email: '',
+  name: '',
+  password1: '',
+  password2: '',
+});
+
+const errors:Ref<String[]> = ref([]);
+
+const signup = () => {
+  errors.value = [];
+
+  if (form.value.name === '') {
+    errors.value.push('Your name is missing');
+  }
+
+  if (form.value.email === '') {
+    errors.value.push('Your email is missing');
+  }
+
+  if (form.value.password1 === '') {
+    errors.value.push('Your password is missing');
+  }
+
+  if (form.value.password1 !== form.value.password2) {
+    errors.value.push('The password does not match');
+  }
+
+  if (errors.value.length === 0) {
+    axios
+      .post('/api/signup/', form.value)
+      .then((response) => {
+        alert(form.value.profile)
+        if (response.data.message === 'success') {
+          alert('User registered');
+          form.value.profile = 'advisor';
+          form.value.email = '';
+          form.value.name = '';
+          form.value.password1 = '';
+          form.value.password2 = '';
+        } else {
+          alert('Something went wrong :(');
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          console.error('Response Error:', error.response.data);
+          console.error('Response Status:', error.response.status);
+          console.error('Response Headers:', error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.error('Request Error:', error.request);
+        } else {
+          // Other errors
+          console.error('Error:', error.message);
+        }
+      });
+  }
+};
+
+</script>
+
+
 <template>
   <div class="auth-wrapper d-flex align-center justify-center pa-4">
     <VCard
@@ -31,6 +115,16 @@
       <VCardText>
         <VForm novalidate @submit.prevent="signup">
           <VRow>
+            <VCol
+                cols="12"
+              >
+                <VSelect
+                  label="Profiles"
+                  placeholder="Select Profile"
+                  :items="['manager', 'advisor']"
+                  v-model="form.profile"
+                />
+              </VCol>
             <!-- Username -->
             <VCol cols="12">
               <VTextField
@@ -96,15 +190,6 @@
               </RouterLink>
             </VCol>
 
-            <VCol
-              cols="12"
-              class="d-flex align-center"
-            >
-              <VDivider />
-              <span class="mx-4">or</span>
-              <VDivider />
-            </VCol>
-
             <!-- auth providers -->
             <VCol
               cols="12"
@@ -117,7 +202,7 @@
         <VRow>
           <template v-if="errors">
             <VCol cols="12">
-              <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
+              <p v-for="error in errors" v-bind:key="String(error)">{{ error }}</p>
             </VCol>
           </template>
         </VRow>
@@ -129,93 +214,3 @@
 <style lang="scss">
 @use "@core/scss/template/pages/page-auth.scss";
 </style>
-
-<script lang="ts">
-import { ref } from 'vue';
-import axios from 'axios';
-
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
-import logo from '@images/logo.svg?raw'
-
-interface Form {
-  email: string;
-  name: string;
-  password1: string;
-  password2: string;
-}
-
-
-const isPassword1Visible = ref(false);
-const isPassword2Visible = ref(false);
-
-export default {
-  setup() {
-    const form: Form = ref({
-      email: '',
-      name: '',
-      password1: '',
-      password2: '',
-    });
-
-    const errors: string[] = ref([]);
-
-    const signup = () => {
-      errors.value = [];
-
-      if (form.value.name === '') {
-        errors.value.push('Your name is missing');
-      }
-
-      if (form.value.email === '') {
-        errors.value.push('Your email is missing');
-      }
-
-      if (form.value.password1 === '') {
-        errors.value.push('Your password is missing');
-      }
-
-      if (form.value.password1 !== form.value.password2) {
-        errors.value.push('The password does not match');
-      }
-
-      if (errors.value.length === 0) {
-        axios
-          .post('/api/signup/', form.value)
-          .then((response) => {
-            alert("Ress"+response)
-            if (response.data.message === 'success') {
-              alert('User registered');
-              form.value.email = '';
-              form.value.name = '';
-              form.value.password1 = '';
-              form.value.password2 = '';
-            } else {
-              alert('Something went wrong :(');
-            }
-          })
-          .catch((error) => {
-            alert(error)
-            if (error.response) {
-              // The request was made and the server responded with a status code
-              console.error('Response Error:', error.response.data);
-              console.error('Response Status:', error.response.status);
-              console.error('Response Headers:', error.response.headers);
-            } else if (error.request) {
-              // The request was made but no response was received
-              console.error('Request Error:', error.request);
-            } else {
-              // Other errors
-              console.error('Error:', error.message);
-            }
-          });
-      }
-    };
-
-    return {
-      form,
-      errors,
-      signup,
-    };
-  },
-};
-</script>

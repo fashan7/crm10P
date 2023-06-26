@@ -74,7 +74,6 @@ export const useUserStore = defineStore({
                 })
                 .catch((error) => {
                     console.log(error)
-
                     this.removeToken()
                 })
         }

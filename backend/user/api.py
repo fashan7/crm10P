@@ -12,6 +12,7 @@ def signup(request):
     message = 'success'
 
     form = SignUpForm({
+        'profile': data.get('profile'),
         'email': data.get('email'),
         'name': data.get('name'),
         'password1': data.get('password1'),
