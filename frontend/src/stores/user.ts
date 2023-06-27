@@ -15,7 +15,9 @@ export const useUserStore = defineStore({
 
     actions: {
         initStore() {
+            console.log('initStore');
             if (localStorage.getItem('user.access')) {
+                console.log('User has access');
                 this.user.access = localStorage.getItem('user.access')
                 this.user.refresh = localStorage.getItem('user.refresh')
                 this.user.name = localStorage.getItem('user.name')
@@ -34,7 +36,9 @@ export const useUserStore = defineStore({
             this.user.isAuthenticated = true
 
             localStorage.setItem('user.access', data.access)
-            localStorage.setItem('user.refresh', data.refresh)
+            localStorage.setItem('user.refresh', data.refresh);
+
+            console.log('user.access ',localStorage.getItem('user.access'));
         },
 
         removeToken() {
@@ -64,7 +68,7 @@ export const useUserStore = defineStore({
         },
 
         refreshToken() {
-            axios.post('/api/user/refresh/', {
+            axios.post('/api/refresh/', {
                 refresh: this.user.refresh
             })
                 .then((response) => {

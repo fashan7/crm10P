@@ -1,12 +1,57 @@
 <script setup lang="ts">
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
+import axios from 'axios';
+import { ref, Ref } from 'vue';
+import { useUserStore } from '@/stores/user';
 import logo from '@images/logo.svg?raw'
+import router from '@/router';
+
+// interface Form {
+//   email: string,
+//   password: string,
+//   remember: false,
+// }
 
 const form = ref({
-  email: '',
-  password: '',
-  remember: false,
+  email:'',
+  password:'',
+  remember:false
 })
+
+const userStore = useUserStore();
+const errors = ref<string[]>([]);
+const login = async () => {
+  errors.value = [];
+
+  if (form.value.email === '') {
+    errors.value.push('Your email is missing');
+  }
+
+  if (form.value.password === '') {
+    errors.value.push('Your password is missing');
+  }
+
+  if (errors.value.length === 0) {
+    console.log("FORMS", form.value)
+    try {
+      const response = await axios.post('/api/login/', form.value);
+      userStore.setToken(response.data);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
+    } catch (error) {
+      console.log('error', error);
+      errors.value.push('The email or password is incorrect! Or the user is not activated!');
+    }
+
+    if (errors.value.length === 0) {
+      try {
+        const response = await axios.get('/api/me/');
+        userStore.setUserInfo(response.data);
+        router.push('/');
+      } catch (error) {
+        console.log('error', error);
+      }
+    }
+  }
+}
 
 const isPasswordVisible = ref(false)
 </script>
@@ -42,7 +87,7 @@ const isPasswordVisible = ref(false)
       </VCardText>
 
       <VCardText>
-        <VForm @submit.prevent="$router.push('/')">
+        <VForm novalidate @submit.prevent="login">
           <VRow>
             <!-- email -->
             <VCol cols="12">
@@ -102,23 +147,6 @@ const isPasswordVisible = ref(false)
               >
                 Create an account
               </RouterLink>
-            </VCol>
-
-            <VCol
-              cols="12"
-              class="d-flex align-center"
-            >
-              <VDivider />
-              <span class="mx-4">or</span>
-              <VDivider />
-            </VCol>
-
-            <!-- auth providers -->
-            <VCol
-              cols="12"
-              class="text-center"
-            >
-              <AuthProvider />
             </VCol>
           </VRow>
         </VForm>

@@ -2,7 +2,6 @@
 import { ref,Ref } from 'vue';
 import axios from 'axios';
 
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 import logo from '@images/logo.svg?raw'
 
 interface Form {
@@ -188,14 +187,6 @@ const signup = () => {
               >
                 Sign in instead
               </RouterLink>
-            </VCol>
-
-            <!-- auth providers -->
-            <VCol
-              cols="12"
-              class="text-center"
-            >
-              <AuthProvider />
             </VCol>
           </VRow>
         </VForm>
