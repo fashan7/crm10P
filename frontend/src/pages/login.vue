@@ -5,12 +5,6 @@ import { useUserStore } from '@/stores/user';
 import logo from '@images/logo.svg?raw'
 import router from '@/router';
 
-// interface Form {
-//   email: string,
-//   password: string,
-//   remember: false,
-// }
-
 const form = ref({
   email:'',
   password:'',
@@ -31,7 +25,6 @@ const login = async () => {
   }
 
   if (errors.value.length === 0) {
-    console.log("FORMS", form.value)
     try {
       const response = await axios.post('/api/login/', form.value);
       userStore.setToken(response.data);

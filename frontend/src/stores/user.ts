@@ -6,10 +6,10 @@ export const useUserStore = defineStore({
     state:() => ({
         user: {
             isAuthenticated: false,
-            name: null,
-            email: null,
-            access: null,
-            refresh: null
+            name: null as string | null,
+            email: null as string | null,
+            access: null as string | null,
+            refresh: null as string | null
         }
     }),
 
@@ -29,7 +29,7 @@ export const useUserStore = defineStore({
             }
         },
 
-        setToken(data) {
+        setToken(data:any) {
             console.log('setToken', data)
             this.user.access  = data.access
             this.user.refresh = data.refresh
@@ -47,8 +47,8 @@ export const useUserStore = defineStore({
             this.user.access  = null
             this.user.refresh = null
             this.user.isAuthenticated = false
-            this.user.name = false
-            this.user.email = false
+            this.user.name = null
+            this.user.email = null
             
 
             localStorage.setItem('user.access', '')
@@ -57,12 +57,12 @@ export const useUserStore = defineStore({
             localStorage.setItem('user.email', '')
         },
 
-        setUserInfo(user) {
+        setUserInfo(user:any) {
             console.log('SetUserInfo', user)
             this.user.name = user.name
             this.user.email = user.email
-            localStorage.setItem('user.name', this.user.name)
-            localStorage.setItem('user.email', this.user.email)
+            localStorage.setItem('user.name', user.name)
+            localStorage.setItem('user.email', user.email)
 
             console.log('User', this.user)
         },
