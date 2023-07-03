@@ -11,10 +11,16 @@ const router = createRouter({
         {
           path: 'dashboard',
           component: () => import('../pages/dashboard.vue'),
+          meta: {
+            requiresAuth: true
+          }
         },
         {
           path: 'account-settings',
           component: () => import('../pages/account-settings.vue'),
+          meta: {
+            requiresAuth: false
+          }
         },
         {
           path: 'typography',
@@ -44,11 +50,14 @@ const router = createRouter({
       children: [
         {
           path: 'login',
-          component: () => import('../pages/login.vue'),
+          component: () => import('../pages/login.vue')
         },
         {
           path: 'register',
           component: () => import('../pages/register.vue'),
+          meta: {
+            requiresAuth: false
+          }
         },
         {
           path: '/:pathMatch(.*)*',
@@ -58,5 +67,6 @@ const router = createRouter({
     },
   ],
 })
+
 
 export default router
