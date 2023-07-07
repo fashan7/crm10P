@@ -8,4 +8,5 @@ urlpatterns = [
     path('signup/', api.signup, name='signup'),
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('update-me/', api.updateDetails, name='update-me')
 ]

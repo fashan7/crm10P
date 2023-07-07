@@ -36,3 +36,11 @@ def signup(request):
         message = 'error'
 
     return JsonResponse({'message':message})
+
+
+@api_view(['PUT'])
+@authentication_classes([])
+@permission_classes([]) 
+def updateDetails(request):
+    print(request.data)
+    return JsonResponse({'message':True}) 

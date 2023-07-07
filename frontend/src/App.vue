@@ -9,9 +9,8 @@ const userStore = useUserStore();
 onBeforeMount(() => {
    userStore.initStore();
    const token = userStore.user.access;
-   userStore.removeToken() 
+   // userStore.removeToken() 
 
-   console.log('dads')
    console.log(userStore.user.isAuthenticated)
    if (token) {
       axios.defaults.headers.common["Authorization"] = "Bearer "+token;
